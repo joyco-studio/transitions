@@ -17,7 +17,8 @@
     "dev": "tsup --watch",
     "typecheck": "tsc --noEmit",
     "version:package": "pnpm changeset version",
-    "release": "pnpm build && pnpm changeset publish"
+    "release": "pnpm build && pnpm changeset publish",
+    "lint": "eslint -c ./eslint.config.mjs . --fix --no-cache"
   },
   "author": "@joycostudio",
   "license": "ISC",
