@@ -4,7 +4,7 @@
     "registry": "https://registry.npmjs.org",
     "access": "public"
   },
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Just transitions",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
