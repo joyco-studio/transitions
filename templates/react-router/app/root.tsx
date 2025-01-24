@@ -15,7 +15,7 @@ import { RouteTransitionManager } from '@joycostudio/transitions'
 import { createRef, useMemo } from 'react'
 import type { RouteConfigEntry } from '@react-router/dev/routes'
 import routesConfig from './routes'
-import { Navigation } from 'components/navigation'
+import { Navigation } from '~/components/navigation'
 
 export const links: Route.LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },

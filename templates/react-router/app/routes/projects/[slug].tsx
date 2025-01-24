@@ -1,5 +1,5 @@
 import { useParams, type MetaFunction } from 'react-router'
-import { Page } from 'components/page'
+import { Page } from '~/components/page'
 
 export const meta: MetaFunction = ({ params }) => {
   return [{ title: `Project ${params.slug}` }]
