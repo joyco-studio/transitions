@@ -1,10 +1,11 @@
-import { useEffect, useRef } from 'react'
+import { createRef, useEffect, useMemo, useRef } from 'react'
 import { SwitchTransition, Transition } from 'react-transition-group'
 import { TinyEmitter } from 'tiny-emitter'
+import { RouteConfigEntry } from '@react-router/dev/routes'
+import { matchPath } from 'react-router'
 
 type RouteTransitionManagerProps = {
-  children: React.ReactNode
-  nodeRef: React.RefObject<HTMLElement | null>
+  children: (nodeRef: React.RefObject<HTMLElement | null>) => React.ReactNode
   pathname: string
   mode?: 'out-in' | 'in-out'
   onEnter: Record<string | 'default', (node: HTMLElement) => Promise<void>>
@@ -14,6 +15,7 @@ type RouteTransitionManagerProps = {
   onExiting?: Record<string | 'default', (node: HTMLElement) => void>
   onExited?: Record<string | 'default', (node: HTMLElement) => void>
   appear?: boolean
+  routes: RouteConfigEntry[]
 }
 
 export const transitionEvents = new TinyEmitter()
@@ -22,7 +24,30 @@ const nodeRefWarning = (pathname: string) => {
   console.warn(`${pathname} - nodeRef is null`)
 }
 
+const getRoutesFlatMap = (routes: RouteConfigEntry[]) => {
+  /* Traverse routes and their .children */
+  const routeNodeRefs: { path: string; nodeRef: React.RefObject<HTMLElement | null> }[] = []
+
+  const traverseRoutes = (_routes: RouteConfigEntry[]) => {
+    for (const route of _routes) {
+      routeNodeRefs.push({
+        path: route.path ?? '/',
+        nodeRef: createRef<HTMLElement | null>(),
+      })
+
+      if (route.children) {
+        traverseRoutes(route.children)
+      }
+    }
+  }
+
+  traverseRoutes(routes)
+
+  return routeNodeRefs
+}
+
 export const RouteTransitionManager = ({
+  routes,
   onEnter,
   onEntering,
   onEntered,
@@ -30,7 +55,6 @@ export const RouteTransitionManager = ({
   onExiting,
   onExited,
   children,
-  nodeRef,
   pathname,
   mode = 'out-in',
   appear = false,
@@ -38,9 +62,13 @@ export const RouteTransitionManager = ({
   const pathnameRef = useRef(pathname)
   const transitions = useRef<Record<string, Promise<void> | undefined>>({})
 
+  const routeNodeRefs = getRoutesFlatMap(routes)
+
   useEffect(() => {
     pathnameRef.current = pathname
   }, [pathname])
+
+  const currentMatch = useMemo(() => routeNodeRefs.find((route) => matchPath(route.path, pathname)), [pathname])
 
   const resolvedOnEnter = onEnter?.[pathname] ?? onEnter?.['default']
   const resolvedOnEntering = onEntering?.[pathname] ?? onEntering?.['default']
@@ -48,6 +76,8 @@ export const RouteTransitionManager = ({
   const resolvedOnExit = onExit?.[pathname] ?? onExit?.['default']
   const resolvedOnExiting = onExiting?.[pathname] ?? onExiting?.['default']
   const resolvedOnExited = onExited?.[pathname] ?? onExited?.['default']
+
+  const nodeRef = currentMatch?.nodeRef ?? createRef()
 
   return (
     <SwitchTransition mode={mode}>
@@ -107,7 +137,7 @@ export const RouteTransitionManager = ({
           resolvedOnExited?.(nodeRef?.current)
         }}
       >
-        {children}
+        {children(nodeRef)}
       </Transition>
     </SwitchTransition>
   )

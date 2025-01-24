@@ -92,7 +92,7 @@ export default function App() {
   return (
     <RouteTransitionManager
       appear
-      nodeRef={currentMatch?.nodeRef ?? createRef()} /* If nothing matches create a dummy ref, so 404 kicks in */
+      routes={routesConfig}
       pathname={location.pathname}
       onEnter={{
         default: (node) => {
@@ -113,19 +113,21 @@ export default function App() {
         },
       }}
     >
-      <main
-        className="overflow-y-clip flex flex-col min-h-svh opacity-0"
-        data-pathname={location.pathname}
-        ref={currentMatch?.nodeRef}
-      >
-        {element}
-        <footer className="flex container mx-auto py-10 justify-between">
-          <p>
-            {'<'}Footer{'/>'}
-          </p>
-          <p>This should fade out with the page</p>
-        </footer>
-      </main>
+      {(nodeRef) => (
+        <main
+          className="overflow-y-clip flex flex-col min-h-svh opacity-0"
+          data-pathname={location.pathname}
+          ref={nodeRef}
+        >
+          {element}
+          <footer className="flex container mx-auto py-10 justify-between">
+            <p>
+              {'<'}Footer{'/>'}
+            </p>
+            <p>This should fade out with the page</p>
+          </footer>
+        </main>
+      )}
     </RouteTransitionManager>
   )
 }
