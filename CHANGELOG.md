@@ -1,5 +1,11 @@
 # @joycostudio/transitions
 
+## 0.0.4
+
+### Patch Changes
+
+- 574c84f: add loader hooks
+
 ## 0.0.3
 
 ### Patch Changes
