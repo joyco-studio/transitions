@@ -16,8 +16,6 @@ This template comes with two GitHub Actions workflows (currently disabled for co
 
 To enable these workflows, simply remove the `.disabled` extension from the workflow files in the `.github/workflows/` directory. We recommend enabling them to automate your package's release process.
 
-<br/>
-
 ## 🦋 Version Management
 
 This library uses [Changesets](https://github.com/changesets/changesets) to manage versions and publish releases. Here's how to use it:
