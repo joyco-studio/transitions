@@ -1,11 +1,11 @@
 {
-  "name": "@joycostudio/generic",
+  "name": "@joycostudio/transitions",
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
     "access": "public"
   },
-  "version": "0.1.1",
-  "description": "The generic template library starter from joyco.studio",
+  "version": "0.0.0",
+  "description": "Just transitions",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -13,7 +13,6 @@
     "dist"
   ],
   "scripts": {
-    "setup:template": "node setup.mjs",
     "build": "tsup",
     "dev": "tsup --watch",
     "typecheck": "tsc --noEmit",
@@ -27,6 +26,7 @@
     "@eslint/js": "^9.18.0",
     "@types/node": "^20.11.24",
     "@types/react": "^18.2.61",
+    "@types/react-transition-group": "^4.4.12",
     "@typescript-eslint/eslint-plugin": "^8.21.0",
     "@typescript-eslint/parser": "^8.21.0",
     "eslint": "^9.18.0",
@@ -43,5 +43,9 @@
   },
   "peerDependencies": {
     "react": ">=16.8.0"
+  },
+  "dependencies": {
+    "react-transition-group": "^4.4.5",
+    "tiny-emitter": "^2.1.0"
   }
 }
