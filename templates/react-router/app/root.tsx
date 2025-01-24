@@ -1,7 +1,22 @@
-import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router'
+import {
+  isRouteErrorResponse,
+  Links,
+  matchPath,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  useLocation,
+  useOutlet,
+} from 'react-router'
 
 import type { Route } from './+types/root'
 import stylesheet from './app.css?url'
+import { RouteTransitionManager } from '@joycostudio/transitions'
+import { createRef, useMemo } from 'react'
+import type { RouteConfigEntry } from '@react-router/dev/routes'
+import routesConfig from './routes'
+import { Navigation } from 'components/navigation'
 
 export const links: Route.LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -30,13 +45,91 @@ export function Layout({ children }: { children: React.ReactNode }) {
         {children}
         <ScrollRestoration />
         <Scripts />
+        <Navigation />
       </body>
     </html>
   )
 }
 
+const getRoutesFlatMap = (routes: RouteConfigEntry[]) => {
+  /* Traverse routes and their .children */
+  const routeNodeRefs: { path: string; nodeRef: React.RefObject<HTMLElement | null> }[] = []
+
+  const traverseRoutes = (_routes: RouteConfigEntry[]) => {
+    for (const route of _routes) {
+      routeNodeRefs.push({
+        path: route.path ?? '/',
+        nodeRef: createRef<HTMLElement | null>(),
+      })
+
+      if (route.children) {
+        traverseRoutes(route.children)
+      }
+    }
+  }
+
+  traverseRoutes(routes)
+
+  return routeNodeRefs
+}
+
+const routeNodeRefs = getRoutesFlatMap(routesConfig)
+console.log(routeNodeRefs)
+
 export default function App() {
-  return <Outlet />
+  const element = useOutlet()
+
+  const location = useLocation()
+
+  const currentMatch = useMemo(
+    () => routeNodeRefs.find((route) => matchPath(route.path, location.pathname)),
+    [location.pathname]
+  )
+
+  console.log('MATCH', currentMatch)
+  console.log('PATH', location.pathname)
+  console.log('NODES', routeNodeRefs)
+
+  // return null
+  return (
+    <RouteTransitionManager
+      appear
+      nodeRef={currentMatch?.nodeRef ?? createRef()} /* If nothing matches create a dummy ref, so 404 kicks in */
+      pathname={location.pathname}
+      onEnter={{
+        default: (node) => {
+          return new Promise((resolve) => {
+            console.log('enter', node)
+            node.classList.add('fade-in')
+            node.addEventListener('animationend', () => resolve(), { once: true })
+          })
+        },
+      }}
+      onExit={{
+        default: (node) => {
+          return new Promise((resolve) => {
+            console.log('exit', node)
+            node.classList.add('fade-out')
+            node.addEventListener('animationend', () => resolve(), { once: true })
+          })
+        },
+      }}
+    >
+      <main
+        className="overflow-y-clip flex flex-col min-h-svh opacity-0"
+        data-pathname={location.pathname}
+        ref={currentMatch?.nodeRef}
+      >
+        {element}
+        <footer className="flex container mx-auto py-10 justify-between">
+          <p>
+            {'<'}Footer{'/>'}
+          </p>
+          <p>This should fade out with the page</p>
+        </footer>
+      </main>
+    </RouteTransitionManager>
+  )
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

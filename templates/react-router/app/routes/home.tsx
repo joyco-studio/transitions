@@ -1,9 +1,11 @@
-import { Welcome } from '../welcome/welcome'
+import { Page } from 'components/page'
+import type { Route } from './+types/home'
+import type { MetaFunction } from 'react-router'
 
-export function meta() {
-  return [{ title: 'New React Router App' }, { name: 'description', content: 'Welcome to React Router!' }]
+export const meta: MetaFunction = () => {
+  return [{ title: 'Home' }]
 }
 
 export default function Home() {
-  return <Welcome />
+  return <Page name="Home" />
 }
