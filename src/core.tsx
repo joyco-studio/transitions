@@ -54,7 +54,7 @@ export const RouteTransitionManager = ({
       <Transition
         appear={appear}
         key={pathname}
-        nodeRef={nodeRef}
+        nodeRef={nodeRef as React.RefObject<HTMLElement>}
         addEndListener={(done) => {
           transitions.current[pathname]?.then(done)
         }}
