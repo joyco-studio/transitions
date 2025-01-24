@@ -3,7 +3,6 @@ import {
   Links,
   matchPath,
   Meta,
-  Outlet,
   Scripts,
   ScrollRestoration,
   useLocation,
@@ -90,7 +89,6 @@ export default function App() {
   console.log('PATH', location.pathname)
   console.log('NODES', routeNodeRefs)
 
-  // return null
   return (
     <RouteTransitionManager
       appear
