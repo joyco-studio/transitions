@@ -1,19 +1,8 @@
-import {
-  isRouteErrorResponse,
-  Links,
-  matchPath,
-  Meta,
-  Scripts,
-  ScrollRestoration,
-  useLocation,
-  useOutlet,
-} from 'react-router'
+import { isRouteErrorResponse, Links, Meta, Scripts, ScrollRestoration, useLocation, useOutlet } from 'react-router'
 
 import type { Route } from './+types/root'
 import stylesheet from './app.css?url'
 import { RouteTransitionManager } from '@joycostudio/transitions'
-import { createRef, useMemo } from 'react'
-import type { RouteConfigEntry } from '@react-router/dev/routes'
 import routesConfig from './routes'
 import { Navigation } from '~/components/navigation'
 
@@ -50,44 +39,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
   )
 }
 
-const getRoutesFlatMap = (routes: RouteConfigEntry[]) => {
-  /* Traverse routes and their .children */
-  const routeNodeRefs: { path: string; nodeRef: React.RefObject<HTMLElement | null> }[] = []
-
-  const traverseRoutes = (_routes: RouteConfigEntry[]) => {
-    for (const route of _routes) {
-      routeNodeRefs.push({
-        path: route.path ?? '/',
-        nodeRef: createRef<HTMLElement | null>(),
-      })
-
-      if (route.children) {
-        traverseRoutes(route.children)
-      }
-    }
-  }
-
-  traverseRoutes(routes)
-
-  return routeNodeRefs
-}
-
-const routeNodeRefs = getRoutesFlatMap(routesConfig)
-console.log(routeNodeRefs)
-
 export default function App() {
   const element = useOutlet()
 
   const location = useLocation()
-
-  const currentMatch = useMemo(
-    () => routeNodeRefs.find((route) => matchPath(route.path, location.pathname)),
-    [location.pathname]
-  )
-
-  console.log('MATCH', currentMatch)
-  console.log('PATH', location.pathname)
-  console.log('NODES', routeNodeRefs)
 
   return (
     <RouteTransitionManager
