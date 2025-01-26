@@ -5,7 +5,7 @@
     "access": "public"
   },
   "version": "0.0.4",
-  "description": "Just transitions",
+  "description": "Transitions for the ladies and gentlemen",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
