@@ -1,4 +1,4 @@
-import { useTransitionState } from '../../../../dist'
+import { useTransitionState } from '@joycostudio/transitions'
 
 export const TransitionState = () => {
   const { state, isEntering, isExiting, isIdle } = useTransitionState()
