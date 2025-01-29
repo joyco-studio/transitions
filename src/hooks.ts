@@ -4,6 +4,9 @@ import { transitionEvents } from './core'
 
 export type SerializeFrom<T> = ReturnType<typeof useLoaderData<T>>
 
+/**
+ * Returns a frozen version of the loader data to prevent data change while the transition is happening
+ */
 export function usePreservedLoaderData<T>(): SerializeFrom<T> {
   const loaderData = useLoaderData<T>()
   const loaderDataRef = useRef<SerializeFrom<T>>(loaderData)
@@ -20,6 +23,10 @@ function useIsomorphicLayoutEffect(effect: EffectCallback, deps?: DependencyList
   return useLayoutEffect(effect, deps)
 }
 
+/**
+ * Returns the current transition state.
+ * These are `entering`, `exiting`, and `idle`.
+ */
 export const useTransitionState = () => {
   const [state, setState] = useState<'entering' | 'exiting' | 'idle'>('idle')
 
