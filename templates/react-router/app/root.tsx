@@ -5,6 +5,7 @@ import stylesheet from './app.css?url'
 import { RouteTransitionManager } from '@joycostudio/transitions'
 import routesConfig from './routes'
 import { Navigation } from '~/components/navigation'
+import { TransitionState } from './components/transition-state'
 
 export const links: Route.LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -69,19 +70,22 @@ export default function App() {
       }}
     >
       {(nodeRef) => (
-        <main
-          className="overflow-y-clip flex flex-col min-h-svh opacity-0"
-          data-pathname={location.pathname}
-          ref={nodeRef}
-        >
-          {element}
-          <footer className="flex container mx-auto py-10 justify-between">
-            <p>
-              {'<'}Footer{'/>'}
-            </p>
-            <p>This should fade out with the page</p>
-          </footer>
-        </main>
+        <>
+          <TransitionState />
+          <main
+            className="overflow-y-clip flex flex-col min-h-svh opacity-0"
+            data-pathname={location.pathname}
+            ref={nodeRef}
+          >
+            {element}
+            <footer className="flex container mx-auto py-10 justify-between">
+              <p>
+                {'<'}Footer{'/>'}
+              </p>
+              <p>This should fade out with the page</p>
+            </footer>
+          </main>
+        </>
       )}
     </RouteTransitionManager>
   )
