@@ -1,8 +1,9 @@
-import { createRef, useEffect, useMemo, useRef } from 'react'
+import { createRef, useEffect, useMemo, useRef, useState } from 'react'
 import { SwitchTransition, Transition } from 'react-transition-group'
 import { TinyEmitter } from 'tiny-emitter'
 import { RouteConfigEntry } from '@react-router/dev/routes'
 import { matchPath } from 'react-router'
+import { nanoid } from 'nanoid'
 
 type RouteTransitionManagerProps = {
   children: (nodeRef: React.RefObject<HTMLElement | null>) => React.ReactNode
@@ -46,6 +47,8 @@ const getRoutesFlatMap = (routes: RouteConfigEntry[]) => {
   return routeNodeRefs
 }
 
+const navigationId = () => nanoid(5)
+
 export const RouteTransitionManager = ({
   routes,
   onEnter,
@@ -61,11 +64,15 @@ export const RouteTransitionManager = ({
 }: RouteTransitionManagerProps) => {
   const pathnameRef = useRef(pathname)
   const transitions = useRef<Record<string, Promise<void> | undefined>>({})
+  const navigationHash = useRef(navigationId())
 
   const routeNodeRefs = getRoutesFlatMap(routes)
 
   useEffect(() => {
     pathnameRef.current = pathname
+    return () => {
+      navigationHash.current = navigationId()
+    }
   }, [pathname])
 
   const currentMatch = useMemo(() => routeNodeRefs.find((route) => matchPath(route.path, pathname)), [pathname])
@@ -78,12 +85,13 @@ export const RouteTransitionManager = ({
   const resolvedOnExited = onExited?.[pathname] ?? onExited?.['default']
 
   const nodeRef = currentMatch?.nodeRef ?? createRef()
+  const key = pathname + `_${navigationHash.current}`
 
   return (
     <SwitchTransition mode={mode}>
       <Transition
         appear={appear}
-        key={pathname}
+        key={key}
         nodeRef={nodeRef as React.RefObject<HTMLElement>}
         addEndListener={(done) => {
           transitions.current[pathname]?.then(done)

@@ -53,7 +53,7 @@ export default function App() {
       onEnter={{
         default: (node) => {
           return new Promise((resolve) => {
-            console.log('enter', node)
+            console.log('enter', node, location.pathname)
             node.classList.add('fade-in')
             node.addEventListener('animationend', () => resolve(), { once: true })
           })
@@ -62,7 +62,7 @@ export default function App() {
       onExit={{
         default: (node) => {
           return new Promise((resolve) => {
-            console.log('exit', node)
+            console.log('exit', node, location.pathname)
             node.classList.add('fade-out')
             node.addEventListener('animationend', () => resolve(), { once: true })
           })
