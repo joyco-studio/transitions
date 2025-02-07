@@ -76,8 +76,6 @@ export const RouteTransitionManager = ({
     }
   }, [pathname])
 
-  const currentMatch = useMemo(() => routeNodeRefs.find((route) => matchPath(route.path, pathname)), [pathname])
-
   const resolvedOnEnter = onEnter?.[pathname] ?? onEnter?.['default']
   const resolvedOnEntering = onEntering?.[pathname] ?? onEntering?.['default']
   const resolvedOnEntered = onEntered?.[pathname] ?? onEntered?.['default']
@@ -85,8 +83,9 @@ export const RouteTransitionManager = ({
   const resolvedOnExiting = onExiting?.[pathname] ?? onExiting?.['default']
   const resolvedOnExited = onExited?.[pathname] ?? onExited?.['default']
 
+  const key = useMemo(() => pathname + `_${navigationHash.current}`, [pathname])
+  const currentMatch = useMemo(() => routeNodeRefs.find((route) => matchPath(route.path, pathname)), [pathname])
   const nodeRef = currentMatch?.nodeRef ?? createRef()
-  const key = pathname + `_${navigationHash.current}`
 
   return (
     <SwitchTransition mode={mode}>
