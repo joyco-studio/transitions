@@ -1,5 +1,11 @@
 # @joycostudio/transitions
 
+## 0.0.6
+
+### Patch Changes
+
+- fcbf82f: Fix quick navigation to different path and then back to the same, add navigationId to the recipe
+
 ## 0.0.5
 
 ### Patch Changes
