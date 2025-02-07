@@ -1,4 +1,5 @@
-import { createRef, useEffect, useMemo, useRef, useState } from 'react'
+/* eslint-disable react-compiler/react-compiler */
+import { createRef, useEffect, useMemo, useRef } from 'react'
 import { SwitchTransition, Transition } from 'react-transition-group'
 import { TinyEmitter } from 'tiny-emitter'
 import { RouteConfigEntry } from '@react-router/dev/routes'
@@ -145,7 +146,8 @@ export const RouteTransitionManager = ({
           resolvedOnExited?.(nodeRef?.current)
         }}
       >
-        {children(nodeRef)}
+        {/* @ts-expect-error - Internal use only, I don't want to type this navigationHash.current */}
+        {children(nodeRef, navigationHash.current)}
       </Transition>
     </SwitchTransition>
   )

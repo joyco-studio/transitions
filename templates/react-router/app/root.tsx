@@ -69,15 +69,17 @@ export default function App() {
         },
       }}
     >
-      {(nodeRef) => (
+      {/* @ts-expect-error - this args error is expected, just for internal usage */}
+      {(nodeRef, _navigationHash) => (
         <>
           <TransitionState />
           <main
             className="overflow-y-clip flex flex-col min-h-svh opacity-0"
             data-pathname={location.pathname}
+            data-transitions-navhash={_navigationHash}
             ref={nodeRef}
           >
-            {element}
+            {element as React.ReactNode}
             <footer className="flex container mx-auto py-10 justify-between">
               <p>
                 {'<'}Footer{'/>'}
