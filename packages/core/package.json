@@ -1,5 +1,5 @@
 {
-  "name": "@transitions/core",
+  "name": "@packages/core",
   "type": "module",
   "main": "./index.ts",
   "private": true,
