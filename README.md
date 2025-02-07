@@ -1,5 +1,7 @@
 # <img src="./static/JOYCO.png" alt="JOYCO Logo" height="36" width="36" align="top" />&nbsp;&nbsp;JOYCO Transitions
 
+![banner.png](./public/banner.png)
+
 Just transitions.
 
 ```bash
