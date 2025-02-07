@@ -12,6 +12,12 @@
   "files": [
     "dist"
   ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.mjs"
+    }
+  },
   "scripts": {
     "build": "tsup",
     "dev": "concurrently \"tsup --watch\" \"cd templates/react-router && pnpm dev\"",
