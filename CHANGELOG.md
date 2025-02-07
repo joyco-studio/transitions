@@ -1,5 +1,11 @@
 # @joycostudio/transitions
 
+## 0.0.8
+
+### Patch Changes
+
+- fa84b62: fix double render over the same path
+
 ## 0.0.7
 
 ### Patch Changes
