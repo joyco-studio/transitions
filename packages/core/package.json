@@ -1,0 +1,9 @@
+{
+  "name": "@packages/core",
+  "type": "module",
+  "main": "./index.ts",
+  "private": true,
+  "changeset": {
+    "ignore": true
+  }
+}

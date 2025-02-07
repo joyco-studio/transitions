@@ -53,7 +53,7 @@ export default function App() {
       onEnter={{
         default: (node) => {
           return new Promise((resolve) => {
-            console.log('enter', node)
+            console.log('enter', node, location.pathname)
             node.classList.add('fade-in')
             node.addEventListener('animationend', () => resolve(), { once: true })
           })
@@ -62,22 +62,24 @@ export default function App() {
       onExit={{
         default: (node) => {
           return new Promise((resolve) => {
-            console.log('exit', node)
+            console.log('exit', node, location.pathname)
             node.classList.add('fade-out')
             node.addEventListener('animationend', () => resolve(), { once: true })
           })
         },
       }}
     >
-      {(nodeRef) => (
+      {/* @ts-expect-error - this args error is expected, just for internal usage */}
+      {(nodeRef, _navigationHash) => (
         <>
           <TransitionState />
           <main
             className="overflow-y-clip flex flex-col min-h-svh opacity-0"
             data-pathname={location.pathname}
+            data-transitions-navhash={_navigationHash}
             ref={nodeRef}
           >
-            {element}
+            {element as React.ReactNode}
             <footer className="flex container mx-auto py-10 justify-between">
               <p>
                 {'<'}Footer{'/>'}
