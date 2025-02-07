@@ -1,5 +1,11 @@
 # @joycostudio/transitions
 
+## 0.0.7
+
+### Patch Changes
+
+- d1ccfd1: fix module resolution
+
 ## 0.0.6
 
 ### Patch Changes
