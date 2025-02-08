@@ -4,7 +4,7 @@
     "registry": "https://registry.npmjs.org",
     "access": "public"
   },
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Transitions for the ladies and gentlemen",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
