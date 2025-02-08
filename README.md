@@ -8,7 +8,81 @@ Just transitions.
 pnpm add @joycostudio/transitions
 ```
 
+## 📖 Documentation
+
+### Core Components
+
+#### `RouteTransitionManager`
+
+The main component responsible for managing route transitions. It wraps your route content and handles all transition states.
+
+```tsx
+<RouteTransitionManager
+  routes={routes}
+  pathname={location.pathname}
+  mode="out-in"
+  onEnter={{
+    default: async (node) => {
+      // Your enter animation
+    },
+  }}
+  onExit={{
+    default: async (node) => {
+      // Your exit animation
+    },
+  }}
+>
+  {(nodeRef) => <div ref={nodeRef}>{/* Your route content */}</div>}
+</RouteTransitionManager>
+```
+
+Props:
+
+- `children`: Function that receives a ref to be attached to your route content
+- `pathname`: Current route pathname
+- `mode`: Transition mode ('out-in' | 'in-out')
+- `onEnter`: Record of enter animations by route or default
+- `onExit`: Record of exit animations by route or default
+- `onEntering`: Optional callbacks when entering starts
+- `onEntered`: Optional callbacks when entering completes
+- `onExiting`: Optional callbacks when exiting starts
+- `onExited`: Optional callbacks when exiting completes
+- `appear`: Whether to animate on first render
+- `routes`: Array of route configurations
+
+#### `DocumentTransitionState`
+
+A utility component that adds a `data-transition-state` attribute to the document root, useful for controlling UI elements during transitions.
+
+```tsx
+<DocumentTransitionState />
+```
+
+### Hooks
+
+#### `usePreservedLoaderData<T>()`
+
+Returns a frozen version of the loader data to prevent data changes during transitions.
+
+```tsx
+const data = usePreservedLoaderData<YourDataType>()
+```
+
+#### `useTransitionState()`
+
+Returns the current transition state and helper flags.
+
+```tsx
+const {
+  state, // 'entering' | 'exiting' | 'idle'
+  isEntering, // boolean
+  isExiting, // boolean
+  isIdle, // boolean
+} = useTransitionState()
+```
+
 ### Lock links while transitioning
+
 If you use the `<DocumentTransitionState />` component. It will attach a `data-transition-state` to the document's root. You can use it to disable all the links while the page is transitioning to make the experience feel more controlled.
 
 ```css
