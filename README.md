@@ -58,6 +58,16 @@ A utility component that adds a `data-transition-state` attribute to the documen
 <DocumentTransitionState />
 ```
 
+#### ✨ TIP | Lock links while transitioning
+If you use the `<DocumentTransitionState />` component. It will attach a `data-transition-state` to the document's root. You can use it to disable all the links while the page is transitioning to make the experience feel more controlled.
+
+```css
+/* Disable links during transitions */
+html:not([data-transition-state='idle']) a {
+  pointer-events: none;
+}
+```
+
 ### Hooks
 
 #### `usePreservedLoaderData<T>()`
@@ -79,17 +89,6 @@ const {
   isExiting, // boolean
   isIdle, // boolean
 } = useTransitionState()
-```
-
-### Lock links while transitioning
-
-If you use the `<DocumentTransitionState />` component. It will attach a `data-transition-state` to the document's root. You can use it to disable all the links while the page is transitioning to make the experience feel more controlled.
-
-```css
-/* Disable links during transitions */
-html:not([data-transition-state='idle']) a {
-  pointer-events: none;
-}
 ```
 
 <br/>
