@@ -19,6 +19,12 @@ body {
   animation: fade-out 1000ms ease-out forwards;
 }
 
+/* Disable links during transitions */
+html:not([data-transition-state='idle']) a {
+  pointer-events: none;
+  color: red !important;
+}
+
 @keyframes fade-in {
   from {
     opacity: 0;

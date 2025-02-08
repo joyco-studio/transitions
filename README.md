@@ -8,15 +8,27 @@ Just transitions.
 pnpm add @joycostudio/transitions
 ```
 
+### Lock links while transitioning
+If you use the `<DocumentTransitionState />` component. It will attach a data-transition-state to the document's root. You can use it to disable all the links while the page is transitioning to make the experience feel more controlled.
+
+```css
+/* Disable links during transitions */
+html:not([data-transition-state='idle']) a {
+  pointer-events: none;
+}
+```
+
+<br/>
+
 ## 🤖 Automatic Workflows
 
 This template comes with two GitHub Actions workflows (currently disabled for convenience):
 
-1. **Release Workflow** (`.github/workflows/release.yml.disabled`): Automates the release process using Changesets. When enabled, it will automatically create release pull requests and publish to npm when changes are pushed to the main branch.
+1. **Release Workflow** (`.github/workflows/release.yml`): Automates the release process using Changesets. When enabled, it will automatically create release pull requests and publish to npm when changes are pushed to the main branch.
 
-2. **Publish Any Commit** (`.github/workflows/publish-any-commit.yml.disabled`): A utility workflow that can build and publish packages for any commit or pull request.
+2. **Publish Any Commit** (`.github/workflows/publish-any-commit.yml`): A utility workflow that can build and publish packages for any commit or pull request.
 
-To enable these workflows, simply remove the `.disabled` extension from the workflow files in the `.github/workflows/` directory. We recommend enabling them to automate your package's release process.
+<br/>
 
 ## 🦋 Version Management
 

@@ -5,6 +5,7 @@ import { TinyEmitter } from 'tiny-emitter'
 import { RouteConfigEntry } from '@react-router/dev/routes'
 import { matchPath } from 'react-router'
 import { nanoid } from 'nanoid'
+import { useTransitionState } from './hooks'
 
 type RouteTransitionManagerProps = {
   children: (nodeRef: React.RefObject<HTMLElement | null>) => React.ReactNode
@@ -150,4 +151,14 @@ export const RouteTransitionManager = ({
       </Transition>
     </SwitchTransition>
   )
+}
+
+export const DocumentTransitionState = () => {
+  const { state } = useTransitionState()
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-transition-state', state)
+  }, [state])
+
+  return <></>
 }
