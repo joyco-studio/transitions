@@ -9,7 +9,7 @@ pnpm add @joycostudio/transitions
 ```
 
 ### Lock links while transitioning
-If you use the `<DocumentTransitionState />` component. It will attach a data-transition-state to the document's root. You can use it to disable all the links while the page is transitioning to make the experience feel more controlled.
+If you use the `<DocumentTransitionState />` component. It will attach a `data-transition-state` to the document's root. You can use it to disable all the links while the page is transitioning to make the experience feel more controlled.
 
 ```css
 /* Disable links during transitions */
