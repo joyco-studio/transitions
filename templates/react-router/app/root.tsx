@@ -2,7 +2,7 @@ import { isRouteErrorResponse, Links, Meta, Scripts, ScrollRestoration, useLocat
 
 import type { Route } from './+types/root'
 import stylesheet from './app.css?url'
-import { RouteTransitionManager } from '@joycostudio/transitions'
+import { DocumentTransitionState, RouteTransitionManager } from '@joycostudio/transitions'
 import routesConfig from './routes'
 import { Navigation } from '~/components/navigation'
 import { TransitionState } from './components/transition-state'
@@ -73,6 +73,7 @@ export default function App() {
       {(nodeRef, _navigationHash) => (
         <>
           <TransitionState />
+          <DocumentTransitionState />
           <main
             className="overflow-y-clip flex flex-col min-h-svh opacity-0"
             data-pathname={location.pathname}
