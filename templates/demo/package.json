@@ -1,0 +1,52 @@
+{
+  "name": "rrv7-starter",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "react-router build && node vercel/prepare.js",
+    "dev": "cross-env NODE_ENV=development node ./dev-server.js",
+    "typecheck": "react-router typegen && tsc",
+    "lint": "eslint -c ./eslint.config.mjs . --fix --no-cache"
+  },
+  "dependencies": {
+    "@gsap/react": "^2.1.2",
+    "@joycostudio/transitions": "workspace:^",
+    "@react-router/express": "^7.1.1",
+    "@react-router/node": "^7.1.1",
+    "@vercel/node": "^3.2.25",
+    "clsx": "^2.1.1",
+    "express": "^4.21.1",
+    "gsap": "^3.12.7",
+    "isbot": "^5.1.17",
+    "react": "^19.0.0",
+    "react-device-detect": "^2.2.3",
+    "react-dom": "^19.0.0",
+    "react-router": "^7.1.3",
+    "tailwind-merge": "^2.6.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.18.0",
+    "@react-router/dev": "^7.1.1",
+    "@types/express": "^5.0.0",
+    "@types/node": "^20",
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19.0.1",
+    "autoprefixer": "^10.4.20",
+    "babel-plugin-react-compiler": "19.0.0-beta-e552027-20250112",
+    "cross-env": "^7.0.3",
+    "eslint": "^9.18.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-compiler": "19.0.0-beta-e552027-20250112",
+    "globals": "^15.14.0",
+    "postcss": "^8.4.49",
+    "prettier": "^3.4.2",
+    "tailwindcss": "^3.4.16",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.21.0",
+    "vite": "^5.4.11",
+    "vite-plugin-babel": "^1.3.0",
+    "vite-tsconfig-paths": "^5.1.4"
+  }
+}

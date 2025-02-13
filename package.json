@@ -20,7 +20,7 @@
   },
   "scripts": {
     "build": "tsup",
-    "dev": "concurrently \"tsup --watch\" \"cd templates/react-router && pnpm dev\"",
+    "dev": "concurrently \"tsup --watch\" \"cd templates/demo && pnpm dev\"",
     "typecheck": "tsc --noEmit",
     "version:package": "pnpm changeset version",
     "release": "pnpm build && pnpm changeset publish",

@@ -1,0 +1,17 @@
+.DS_Store
+/node_modules/
+
+# React Router
+/.react-router/
+/build/
+
+# Vercel
+/.vercel/
+
+# Environment
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+!.env.example

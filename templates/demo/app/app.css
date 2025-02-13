@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --header-height: 48px;
+
+  @screen md {
+    --header-height: 72px;
+  }
+}
+
+html,
+body {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-display: swap;
+  text-rendering: geometricprecision;
+  text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @apply text-primary bg-background;
+
+  @media (prefers-color-scheme: dark) {
+    color-scheme: dark;
+  }
+}
