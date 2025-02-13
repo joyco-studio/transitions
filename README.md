@@ -2,7 +2,7 @@
 
 ![banner.png](./static/banner.png)
 
-Plug & Play page transitions for React Router.
+Plug & Play page transitions for React Router. See it in action in our [RRv7 starter](https://rrv7.joyco.studio).
 
 ```bash
 pnpm add @joycostudio/transitions
