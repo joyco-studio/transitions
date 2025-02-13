@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "react-router build && node vercel/prepare.js",
+    "build": "cd ../.. && pnpm build && cd templates/demo && react-router build && node vercel/prepare.js",
     "dev": "cross-env NODE_ENV=development node ./dev-server.js",
     "typecheck": "react-router typegen && tsc",
     "lint": "eslint -c ./eslint.config.mjs . --fix --no-cache"
