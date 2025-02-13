@@ -2,7 +2,7 @@
 
 ![banner.png](./static/banner.png)
 
-Just transitions.
+Plug & Play page transitions for React Router.
 
 ```bash
 pnpm add @joycostudio/transitions
