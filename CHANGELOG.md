@@ -1,5 +1,11 @@
 # @joycostudio/transitions
 
+## 0.0.9
+
+### Patch Changes
+
+- 0c34bce: Introduce DocumentTransitionState component and lock links example
+
 ## 0.0.8
 
 ### Patch Changes
