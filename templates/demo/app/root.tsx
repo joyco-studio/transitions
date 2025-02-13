@@ -47,7 +47,7 @@ export const links: Route.LinksFunction = () =>
 export const loader = () => {
   const mediaLinks = [
     { label: 'x', link: 'https://x.com/joyco_studio' },
-    { label: 'github', link: 'https://github.com/joyco-studio/rrv7-starter' },
+    { label: 'github', link: 'https://github.com/joyco-studio/transitions' },
   ]
   return { rebelLog: WATERMARK, mediaLinks }
 }

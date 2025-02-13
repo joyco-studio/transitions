@@ -9,6 +9,7 @@
   "updateInternalDependencies": "patch",
   "ignore": [
     "@packages/core",
-    "@templates/react-router"
+    "@templates/react-router",
+    "@templates/demo"
   ]
 }
