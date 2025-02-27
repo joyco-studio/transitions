@@ -20,6 +20,20 @@ import Footer from './components/footer'
 import { SITE_URL, WATERMARK } from './lib/utils/constants'
 import { generateMeta } from './lib/utils/meta'
 import { generateLinks } from './lib/utils/links'
+import { nanoid } from 'nanoid'
+
+const split = (node: HTMLElement) => {
+  const text = node.textContent || ''
+  node.textContent = ''
+  const charSpans = Array.from(text).map((char) => {
+    const span = document.createElement('span')
+    // span.style.display = 'inline-block'
+    span.textContent = char
+    node.appendChild(span)
+    return span
+  })
+  return charSpans
+}
 
 export const links: Route.LinksFunction = () =>
   generateLinks({
@@ -115,7 +129,54 @@ export default function App() {
       }}
       onExit={{
         default: (node) => {
-          return promisifyGsap(gsap.timeline().fromTo(node, { opacity: 1 }, { opacity: 0, duration: 0.5 }, 0))
+          const animateElements = node.querySelectorAll<HTMLElement>('[data-animate]')
+
+          const groupedChunks: { [key: string]: HTMLSpanElement[] } = {}
+
+          animateElements.forEach((element) => {
+            let dataAnimate = element.getAttribute('data-animate')
+            const dataSplit = element.getAttribute('data-split') === 'true'
+
+            if (dataAnimate === 'true') {
+              dataAnimate = nanoid(10)
+            }
+
+            if (dataAnimate) {
+              if (!groupedChunks[dataAnimate]) {
+                groupedChunks[dataAnimate] = []
+              }
+
+              if (dataSplit) {
+                groupedChunks[dataAnimate].push(...split(element))
+              } else {
+                groupedChunks[dataAnimate].push(element)
+              }
+            }
+          })
+
+          const tl = gsap.timeline()
+          const factor = 0.5
+
+          Object.values(groupedChunks).forEach((chunks, idx) => {
+            tl.fromTo(
+              chunks,
+              { opacity: 1 },
+              {
+                opacity: 0,
+                duration: 0.7 * factor,
+                ease: 'sine.out',
+                stagger: {
+                  each: 0.1 * factor,
+                  ease: 'none',
+                },
+              },
+              idx * 0.5
+            )
+          })
+
+          tl.fromTo(node, { opacity: 1 }, { opacity: 0, duration: 0.5 }, `>-=${0.2 * factor}`)
+
+          return promisifyGsap(tl)
         },
       }}
     >

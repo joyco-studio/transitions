@@ -18,6 +18,7 @@
     "express": "^4.21.1",
     "gsap": "^3.12.7",
     "isbot": "^5.1.17",
+    "nanoid": "^5.0.9",
     "react": "^19.0.0",
     "react-device-detect": "^2.2.3",
     "react-dom": "^19.0.0",
