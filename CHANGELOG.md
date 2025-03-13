@@ -8,7 +8,7 @@
 
 ### Patch Changes
 
-- 1c987f9: Introducing preventTransition callback, you can skip the transition pipeline and changin keys at transition route level in favor of nested RouteTransitions.
+- 1c987f9: Introducing preventTransition callback, you can skip the transition pipeline and changing keys at transition route level in favor of nested RouteTransitions.
 
 ## 0.0.9
 
