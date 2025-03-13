@@ -88,7 +88,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         <Header />
         {children}
         <Footer />
@@ -109,8 +109,12 @@ export default function App() {
       appear
       routes={routes}
       pathname={location.pathname}
-      onEntering={() => {
-        window.scrollTo({ top: 0 })
+      preventTransition={(_, to) => {
+        if (to === '/prevent-transition') {
+          return true
+        }
+
+        return false
       }}
       onEnter={(node, from, to) => {
         console.log('[onEnter]', { from, to })
