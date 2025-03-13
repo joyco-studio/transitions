@@ -11,12 +11,12 @@ type RouteTransitionManagerProps = {
   children: (nodeRef: React.RefObject<HTMLElement | null>) => React.ReactNode
   pathname: string
   mode?: 'out-in' | 'in-out'
-  onEnter: Record<string | 'default', (node: HTMLElement) => Promise<void>>
-  onExit: Record<string | 'default', (node: HTMLElement) => Promise<void>>
-  onEntering?: Record<string | 'default', (node: HTMLElement) => void>
-  onEntered?: Record<string | 'default', (node: HTMLElement) => void>
-  onExiting?: Record<string | 'default', (node: HTMLElement) => void>
-  onExited?: Record<string | 'default', (node: HTMLElement) => void>
+  onEnter: (node: HTMLElement, from: string | undefined, to: string) => Promise<void>
+  onExit: (node: HTMLElement, from: string | undefined, to: string) => Promise<void>
+  onEntering?: (node: HTMLElement, from: string | undefined, to: string) => void
+  onEntered?: (node: HTMLElement, from: string | undefined, to: string) => void
+  onExiting?: (node: HTMLElement, from: string | undefined, to: string) => void
+  onExited?: (node: HTMLElement, from: string | undefined, to: string) => void
   appear?: boolean
   routes: RouteConfigEntry[]
 }
@@ -64,6 +64,7 @@ export const RouteTransitionManager = ({
   mode = 'out-in',
   appear = false,
 }: RouteTransitionManagerProps) => {
+  const prevPathnameRef = useRef<string>()
   const pathnameRef = useRef(pathname)
   const transitions = useRef<Record<string, Promise<void> | undefined>>({})
   const navigationHash = useRef(navigationId())
@@ -71,22 +72,17 @@ export const RouteTransitionManager = ({
   const routeNodeRefs = getRoutesFlatMap(routes)
 
   useEffect(() => {
-    pathnameRef.current = pathname
     return () => {
+      prevPathnameRef.current = pathname
       navigationHash.current = navigationId()
     }
   }, [pathname])
 
-  const resolvedOnEnter = onEnter?.[pathname] ?? onEnter?.['default']
-  const resolvedOnEntering = onEntering?.[pathname] ?? onEntering?.['default']
-  const resolvedOnEntered = onEntered?.[pathname] ?? onEntered?.['default']
-  const resolvedOnExit = onExit?.[pathname] ?? onExit?.['default']
-  const resolvedOnExiting = onExiting?.[pathname] ?? onExiting?.['default']
-  const resolvedOnExited = onExited?.[pathname] ?? onExited?.['default']
-
   const key = useMemo(() => pathname + `_${navigationHash.current}`, [pathname])
   const currentMatch = useMemo(() => routeNodeRefs.find((route) => matchPath(route.path, pathname)), [pathname])
   const nodeRef = currentMatch?.nodeRef ?? createRef()
+
+  pathnameRef.current = pathname
 
   return (
     <SwitchTransition mode={mode}>
@@ -97,21 +93,14 @@ export const RouteTransitionManager = ({
         addEndListener={(done) => {
           transitions.current[pathname]?.then(done)
         }}
+        /* ENTER EVENTS */
         onEnter={() => {
           if (!nodeRef?.current) {
             nodeRefWarning(pathname)
             return
           }
           transitionEvents.emit('enter', pathname)
-          transitions.current[pathname] = resolvedOnEnter?.(nodeRef?.current)
-        }}
-        onExit={() => {
-          if (!nodeRef?.current) {
-            nodeRefWarning(pathname)
-            return
-          }
-          transitionEvents.emit('exit', pathname)
-          transitions.current[pathname] = resolvedOnExit?.(nodeRef?.current)
+          transitions.current[pathname] = onEnter?.(nodeRef?.current, prevPathnameRef.current, pathnameRef.current)
         }}
         onEntering={() => {
           if (!nodeRef?.current) {
@@ -119,7 +108,7 @@ export const RouteTransitionManager = ({
             return
           }
           transitionEvents.emit('entering', pathname)
-          resolvedOnEntering?.(nodeRef?.current)
+          onEntering?.(nodeRef?.current, prevPathnameRef.current, pathnameRef.current)
         }}
         onEntered={() => {
           if (!nodeRef?.current) {
@@ -127,7 +116,16 @@ export const RouteTransitionManager = ({
             return
           }
           transitionEvents.emit('entered', pathname)
-          resolvedOnEntered?.(nodeRef?.current)
+          onEntered?.(nodeRef?.current, prevPathnameRef.current, pathnameRef.current)
+        }}
+        /* EXIT EVENTS */
+        onExit={() => {
+          if (!nodeRef?.current) {
+            nodeRefWarning(pathname)
+            return
+          }
+          transitionEvents.emit('exit', pathname)
+          transitions.current[pathname] = onExit?.(nodeRef?.current, pathname, pathnameRef.current)
         }}
         onExiting={() => {
           if (!nodeRef?.current) {
@@ -135,7 +133,7 @@ export const RouteTransitionManager = ({
             return
           }
           transitionEvents.emit('exiting', pathname)
-          resolvedOnExiting?.(nodeRef?.current)
+          onExiting?.(nodeRef?.current, pathname, pathnameRef.current)
         }}
         onExited={() => {
           if (!nodeRef?.current) {
@@ -143,7 +141,7 @@ export const RouteTransitionManager = ({
             return
           }
           transitionEvents.emit('exited', pathname)
-          resolvedOnExited?.(nodeRef?.current)
+          onExited?.(nodeRef?.current, pathname, pathnameRef.current)
         }}
       >
         {/* @ts-expect-error - Internal use only, I don't want to type this navigationHash.current */}

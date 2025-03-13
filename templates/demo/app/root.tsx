@@ -109,75 +109,73 @@ export default function App() {
       appear
       routes={routes}
       pathname={location.pathname}
-      onEntering={{
-        default: () => {
-          window.scrollTo({ top: 0 })
-        },
+      onEntering={() => {
+        window.scrollTo({ top: 0 })
       }}
-      onEnter={{
-        default: (node) => {
-          return promisifyGsap(
-            gsap
-              .timeline({
-                onComplete: () => {
-                  gsap.set(node, { clearProps: 'all' })
-                },
-              })
-              .fromTo(node, { opacity: 0 }, { opacity: 1, duration: 1 })
-          )
-        },
-      }}
-      onExit={{
-        default: (node) => {
-          const animateElements = node.querySelectorAll<HTMLElement>('[data-animate]')
+      onEnter={(node, from, to) => {
+        console.log('[onEnter]', { from, to })
 
-          const groupedChunks: { [key: string]: HTMLSpanElement[] } = {}
-
-          animateElements.forEach((element) => {
-            let dataAnimate = element.getAttribute('data-animate')
-            const dataSplit = element.getAttribute('data-split') === 'true'
-
-            if (dataAnimate === 'true') {
-              dataAnimate = nanoid(10)
-            }
-
-            if (dataAnimate) {
-              if (!groupedChunks[dataAnimate]) {
-                groupedChunks[dataAnimate] = []
-              }
-
-              if (dataSplit) {
-                groupedChunks[dataAnimate].push(...split(element))
-              } else {
-                groupedChunks[dataAnimate].push(element)
-              }
-            }
-          })
-
-          const tl = gsap.timeline()
-          const factor = 0.5
-
-          Object.values(groupedChunks).forEach((chunks, idx) => {
-            tl.fromTo(
-              chunks,
-              { opacity: 1 },
-              {
-                opacity: 0,
-                duration: 0.7 * factor,
-                ease: 'sine.out',
-                stagger: {
-                  each: 0.1 * factor,
-                  ease: 'none',
-                },
+        return promisifyGsap(
+          gsap
+            .timeline({
+              onComplete: () => {
+                gsap.set(node, { clearProps: 'all' })
               },
-              idx * 0.5
-            )
-          })
+            })
+            .fromTo(node, { opacity: 0 }, { opacity: 1, duration: 1 })
+        )
+      }}
+      onExit={(node, from, to) => {
+        console.log('[onExit]', { from, to })
 
-          tl.fromTo(node, { opacity: 1 }, { opacity: 0, duration: 0.5 }, `>-=${0.2 * factor}`)
+        const animateElements = node.querySelectorAll<HTMLElement>('[data-animate]')
 
-          return promisifyGsap(tl)
-        },
+        const groupedChunks: { [key: string]: HTMLSpanElement[] } = {}
+
+        animateElements.forEach((element) => {
+          let dataAnimate = element.getAttribute('data-animate')
+          const dataSplit = element.getAttribute('data-split') === 'true'
+
+          if (dataAnimate === 'true') {
+            dataAnimate = nanoid(10)
+          }
+
+          if (dataAnimate) {
+            if (!groupedChunks[dataAnimate]) {
+              groupedChunks[dataAnimate] = []
+            }
+
+            if (dataSplit) {
+              groupedChunks[dataAnimate].push(...split(element))
+            } else {
+              groupedChunks[dataAnimate].push(element)
+            }
+          }
+        })
+
+        const tl = gsap.timeline()
+        const factor = 0.5
+
+        Object.values(groupedChunks).forEach((chunks, idx) => {
+          tl.fromTo(
+            chunks,
+            { opacity: 1 },
+            {
+              opacity: 0,
+              duration: 0.7 * factor,
+              ease: 'sine.out',
+              stagger: {
+                each: 0.1 * factor,
+                ease: 'none',
+              },
+            },
+            idx * 0.5
+          )
+        })
+
+        tl.fromTo(node, { opacity: 1 }, { opacity: 0, duration: 0.5 }, `>-=${0.2 * factor}`)
+
+        return promisifyGsap(tl)
       }}
     >
       {(ref) => (
