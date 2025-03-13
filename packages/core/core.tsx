@@ -8,7 +8,7 @@ import { nanoid } from 'nanoid'
 import { useTransitionState } from './hooks'
 
 type RouteTransitionManagerProps = {
-  children: (nodeRef: React.RefObject<HTMLElement | null>) => React.ReactNode
+  children: (nodeRef: React.RefObject<HTMLElement | HTMLDivElement>) => React.ReactNode
   pathname: string
   mode?: 'out-in' | 'in-out'
   onEnter: (node: HTMLElement, from: string | undefined, to: string) => Promise<void>
