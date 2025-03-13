@@ -14,7 +14,7 @@ pnpm add @joycostudio/transitions
 
 #### `RouteTransitionManager`
 
-The main component responsible for managing route transitions. It wraps your route content and handles all transition states.
+The main component responsible for managing route transitions. It wraps your route content and handles all transition states. It NEEDS to have anchor a ref to some element so it can be preserved on unmount. If you don't want to mess the inner children layout with a wrapper just do `<div style={{ display: 'contents' }} ref={ref}>{myUltraDelicateChildren}</div>`.
 
 ```tsx
 <RouteTransitionManager
@@ -59,6 +59,7 @@ A utility component that adds a `data-transition-state` attribute to the documen
 ```
 
 #### ✨ TIP | Lock links while transitioning
+
 If you use the `<DocumentTransitionState />` component. It will attach a `data-transition-state` to the document's root. You can use it to disable all the links while the page is transitioning to make the experience feel more controlled.
 
 ```css
