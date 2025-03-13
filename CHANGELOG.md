@@ -1,5 +1,15 @@
 # @joycostudio/transitions
 
+## 0.1.0
+
+### Minor Changes
+
+- 1c987f9: BREAKING CHANGE > We got rid of the weird callback object api for transition events in favor of providing the "from" and "to" values on navigation.
+
+### Patch Changes
+
+- 1c987f9: Introducing preventTransition callback, you can skip the transition pipeline and changing keys at transition route level in favor of nested RouteTransitions.
+
 ## 0.0.9
 
 ### Patch Changes
