@@ -1,5 +1,11 @@
 # @joycostudio/transitions
 
+## 0.2.0
+
+### Minor Changes
+
+- d879ace: Add usePreservedRouteLoaderData hook to preserve route loader data during transitions
+
 ## 0.1.0
 
 ### Minor Changes
