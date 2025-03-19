@@ -1,5 +1,5 @@
 import { DependencyList, EffectCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { useLoaderData } from 'react-router'
+import { useLoaderData, useRouteLoaderData } from 'react-router'
 import { transitionEvents } from './core'
 
 export type SerializeFrom<T> = ReturnType<typeof useLoaderData<T>>
@@ -17,6 +17,18 @@ export function usePreservedLoaderData<T>(): SerializeFrom<T> {
 
   // eslint-disable-next-line react-compiler/react-compiler
   return loaderDataRef.current
+}
+
+export function usePreservedRouteLoaderData<T>(routeId: string): SerializeFrom<T> | undefined {
+  const routeLoaderData = useRouteLoaderData<T>(routeId)
+  const routeLoaderDataRef = useRef<SerializeFrom<T> | undefined>(routeLoaderData)
+
+  useIsomorphicLayoutEffect(() => {
+    routeLoaderDataRef.current = routeLoaderData
+  }, [])
+
+  // eslint-disable-next-line react-compiler/react-compiler
+  return routeLoaderDataRef.current
 }
 
 function useIsomorphicLayoutEffect(effect: EffectCallback, deps?: DependencyList) {
