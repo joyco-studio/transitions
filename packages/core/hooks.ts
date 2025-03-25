@@ -40,7 +40,7 @@ function useIsomorphicLayoutEffect(effect: EffectCallback, deps?: DependencyList
  * Returns the current transition state.
  * These are `entering`, `exiting`, and `idle`.
  */
-export const useTransitionState = ({ events = defaultTransitionEvents }: { events?: TinyEmitter }) => {
+export const useTransitionState = (events: TinyEmitter = defaultTransitionEvents) => {
   const [state, setState] = useState<'entering' | 'exiting' | 'idle'>('idle')
 
   useEffect(() => {

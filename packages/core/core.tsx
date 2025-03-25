@@ -165,7 +165,7 @@ type DocumentTransitionStateProps = {
 }
 
 export const DocumentTransitionState = ({ events = defaultTransitionEvents }: DocumentTransitionStateProps) => {
-  const { state } = useTransitionState({ events })
+  const { state } = useTransitionState(events)
 
   useEffect(() => {
     document.documentElement.setAttribute('data-transition-state', state)
@@ -188,7 +188,7 @@ export const createTransition = () => {
     DocumentTransitionState: (props: Omit<DocumentTransitionStateProps, 'events'>) => (
       <DocumentTransitionState {...props} events={events} />
     ),
-    useTransitionState: () => useTransitionState({ events }),
+    useTransitionState: () => useTransitionState(events),
     useEntrance: (fn: TransitionRunnable, options?: TransitionSchedulerOptions) => useEntrance(scheduler, fn, options),
     useExit: (fn: TransitionRunnable, options?: TransitionSchedulerOptions) => useExit(scheduler, fn, options),
   }
