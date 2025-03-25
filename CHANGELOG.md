@@ -1,5 +1,11 @@
 # @joycostudio/transitions
 
+## 0.3.0
+
+### Minor Changes
+
+- 4b172bb: add createTransition and scheduler functionality
+
 ## 0.2.0
 
 ### Minor Changes
