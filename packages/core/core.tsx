@@ -28,7 +28,7 @@ type RouteTransitionManagerProps = {
   preventTransition?: (from: string | undefined, to: string) => boolean
   appear?: boolean
   routes: RouteConfigEntry[]
-  events: TinyEmitter
+  events?: TinyEmitter
 }
 
 export const RouteTransitionManager = ({
