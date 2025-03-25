@@ -1,6 +1,7 @@
 import { DependencyList, EffectCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useLoaderData, useRouteLoaderData } from 'react-router'
-import { transitionEvents } from './core'
+import { TinyEmitter } from 'tiny-emitter'
+import { defaultTransitionEvents } from './events'
 
 export type SerializeFrom<T> = ReturnType<typeof useLoaderData<T>>
 
@@ -39,7 +40,7 @@ function useIsomorphicLayoutEffect(effect: EffectCallback, deps?: DependencyList
  * Returns the current transition state.
  * These are `entering`, `exiting`, and `idle`.
  */
-export const useTransitionState = () => {
+export const useTransitionState = ({ events = defaultTransitionEvents }: { events?: TinyEmitter }) => {
   const [state, setState] = useState<'entering' | 'exiting' | 'idle'>('idle')
 
   useEffect(() => {
@@ -47,14 +48,14 @@ export const useTransitionState = () => {
     const onExit = () => setState('exiting')
     const onIdle = () => setState('idle')
 
-    transitionEvents.on('entering', onEnter)
-    transitionEvents.on('exiting', onExit)
-    transitionEvents.on('entered', onIdle)
+    events.on('entering', onEnter)
+    events.on('exiting', onExit)
+    events.on('entered', onIdle)
 
     return () => {
-      transitionEvents.off('entering', onEnter)
-      transitionEvents.off('exiting', onExit)
-      transitionEvents.off('entered', onIdle)
+      events.off('entering', onEnter)
+      events.off('exiting', onExit)
+      events.off('entered', onIdle)
     }
   }, [])
 

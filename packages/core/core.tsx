@@ -4,8 +4,16 @@ import { SwitchTransition, Transition } from 'react-transition-group'
 import { TinyEmitter } from 'tiny-emitter'
 import { RouteConfigEntry } from '@react-router/dev/routes'
 import { matchPath } from 'react-router'
-import { customAlphabet } from 'nanoid'
 import { useTransitionState } from './hooks'
+import { getRoutesFlatMap, nanoid, nodeRefWarning } from './helpers'
+import { defaultTransitionEvents } from './events'
+import {
+  createTransitionScheduler,
+  TransitionRunnable,
+  TransitionSchedulerOptions,
+  useEntrance,
+  useExit,
+} from './scheduler'
 
 type RouteTransitionManagerProps = {
   children: (nodeRef: React.RefObject<HTMLElement | HTMLDivElement>) => React.ReactNode
@@ -20,37 +28,8 @@ type RouteTransitionManagerProps = {
   preventTransition?: (from: string | undefined, to: string) => boolean
   appear?: boolean
   routes: RouteConfigEntry[]
+  events: TinyEmitter
 }
-
-export const transitionEvents = new TinyEmitter()
-
-const nodeRefWarning = (pathname: string) => {
-  console.warn(`${pathname} - nodeRef is null`)
-}
-
-const getRoutesFlatMap = (routes: RouteConfigEntry[]) => {
-  /* Traverse routes and their .children */
-  const routeNodeRefs: { path: string; nodeRef: React.RefObject<HTMLElement | null> }[] = []
-
-  const traverseRoutes = (_routes: RouteConfigEntry[]) => {
-    for (const route of _routes) {
-      routeNodeRefs.push({
-        path: route.path ?? '/',
-        nodeRef: createRef<HTMLElement | null>(),
-      })
-
-      if (route.children) {
-        traverseRoutes(route.children)
-      }
-    }
-  }
-
-  traverseRoutes(routes)
-
-  return routeNodeRefs
-}
-
-const nanoid = customAlphabet('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', 5)
 
 export const RouteTransitionManager = ({
   routes,
@@ -64,6 +43,7 @@ export const RouteTransitionManager = ({
   children,
   pathname,
   mode = 'out-in',
+  events = defaultTransitionEvents,
   appear = false,
 }: RouteTransitionManagerProps) => {
   const callbackTimePrevPathnameRef = useRef<string>()
@@ -128,7 +108,7 @@ export const RouteTransitionManager = ({
             nodeRefWarning(pathname)
             return
           }
-          transitionEvents.emit('enter', pathname)
+          events.emit('enter', pathname)
           transitions.current[pathname] = onEnter?.(nodeRef?.current, callbackTimePrevPathnameRef.current, pathname)
         }}
         onEntering={() => {
@@ -136,7 +116,7 @@ export const RouteTransitionManager = ({
             nodeRefWarning(pathname)
             return
           }
-          transitionEvents.emit('entering', pathname)
+          events.emit('entering', pathname)
           onEntering?.(nodeRef?.current, callbackTimePrevPathnameRef.current, pathname)
         }}
         onEntered={() => {
@@ -144,7 +124,7 @@ export const RouteTransitionManager = ({
             nodeRefWarning(pathname)
             return
           }
-          transitionEvents.emit('entered', pathname)
+          events.emit('entered', pathname)
           onEntered?.(nodeRef?.current, callbackTimePrevPathnameRef.current, pathname)
         }}
         /* EXIT EVENTS */
@@ -153,7 +133,7 @@ export const RouteTransitionManager = ({
             nodeRefWarning(pathname)
             return
           }
-          transitionEvents.emit('exit', pathname)
+          events.emit('exit', pathname)
           transitions.current[pathname] = onExit?.(nodeRef?.current, pathname, pathnameRef.current)
         }}
         onExiting={() => {
@@ -161,7 +141,7 @@ export const RouteTransitionManager = ({
             nodeRefWarning(pathname)
             return
           }
-          transitionEvents.emit('exiting', pathname)
+          events.emit('exiting', pathname)
           onExiting?.(nodeRef?.current, pathname, pathnameRef.current)
         }}
         onExited={() => {
@@ -169,7 +149,7 @@ export const RouteTransitionManager = ({
             nodeRefWarning(pathname)
             return
           }
-          transitionEvents.emit('exited', pathname)
+          events.emit('exited', pathname)
           onExited?.(nodeRef?.current, pathname, pathnameRef.current)
         }}
       >
@@ -180,12 +160,36 @@ export const RouteTransitionManager = ({
   )
 }
 
-export const DocumentTransitionState = () => {
-  const { state } = useTransitionState()
+type DocumentTransitionStateProps = {
+  events?: TinyEmitter
+}
+
+export const DocumentTransitionState = ({ events = defaultTransitionEvents }: DocumentTransitionStateProps) => {
+  const { state } = useTransitionState({ events })
 
   useEffect(() => {
     document.documentElement.setAttribute('data-transition-state', state)
   }, [state])
 
   return <></>
+}
+
+/* Handy transition manager factory */
+export const createTransition = () => {
+  const events = new TinyEmitter()
+  const scheduler = createTransitionScheduler()
+
+  return {
+    events,
+    scheduler,
+    RouteTransitionManager: (props: Omit<RouteTransitionManagerProps, 'events'>) => (
+      <RouteTransitionManager {...props} events={events} />
+    ),
+    DocumentTransitionState: (props: Omit<DocumentTransitionStateProps, 'events'>) => (
+      <DocumentTransitionState {...props} events={events} />
+    ),
+    useTransitionState: () => useTransitionState({ events }),
+    useEntrance: (fn: TransitionRunnable, options?: TransitionSchedulerOptions) => useEntrance(scheduler, fn, options),
+    useExit: (fn: TransitionRunnable, options?: TransitionSchedulerOptions) => useExit(scheduler, fn, options),
+  }
 }
