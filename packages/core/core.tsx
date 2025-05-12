@@ -1,5 +1,5 @@
 /* eslint-disable react-compiler/react-compiler */
-import { createRef, useEffect, useMemo, useRef } from 'react'
+import { createRef, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import { SwitchTransition, Transition } from 'react-transition-group'
 import { TinyEmitter } from 'tiny-emitter'
 import { RouteConfigEntry } from '@react-router/dev/routes'
@@ -59,6 +59,15 @@ export const RouteTransitionManager = ({
       callbackTimePrevPathnameRef.current = pathname
     }
   }, [pathname])
+
+  useLayoutEffect(() => {
+    const prevValue = window.history.scrollRestoration
+    window.history.scrollRestoration = 'manual'
+
+    return () => {
+      window.history.scrollRestoration = prevValue
+    }
+  }, [])
 
   const currentMatch = useMemo(() => routeNodeRefs.find((route) => matchPath(route.path, pathname)), [pathname])
   const nodeRef = currentMatch?.nodeRef ?? createRef()
