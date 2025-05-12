@@ -1,5 +1,11 @@
 # @joycostudio/transitions
 
+## 0.3.1
+
+### Patch Changes
+
+- 29e5112: set history scrollrestoration to manual by default
+
 ## 0.3.0
 
 ### Minor Changes
